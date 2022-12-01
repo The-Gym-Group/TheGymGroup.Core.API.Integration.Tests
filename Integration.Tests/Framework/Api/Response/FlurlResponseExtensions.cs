@@ -13,5 +13,6 @@ namespace Framework.Api.Response
         {
             return (await self.GetJsonAsync()).ToList() as List<T>;
         }
+
     }
 }
