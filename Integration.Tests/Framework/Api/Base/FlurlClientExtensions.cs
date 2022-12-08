@@ -19,13 +19,14 @@ namespace Framework.Api.Base
         /// <summary>
         /// Configure a flurlClient for use with Clubware, after setting the site path.
         /// </summary>
-        public static async Task<IFlurlClient> ConfigureForClubware(this IFlurlClient flurlClient)
+        public static async Task<IFlurlClient> ConfigureForClubware(this IFlurlClient flurlClient, string baseUrl=null)
         {
+            flurlClient.BaseUrl = baseUrl ?? flurlClient.BaseUrl;
             //set base headers
             flurlClient = flurlClient.WithHeaders(new
             {
                 Connection = "keep-alive",
-                Accept = "*/*",
+                Accept = "application/json",
                 Content = "application/json",
             })
                 .WithHeader("Accept-Encoding", "gzip, deflate, br")
