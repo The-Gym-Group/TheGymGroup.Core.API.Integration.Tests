@@ -1,4 +1,6 @@
-﻿using IntegrationTests.Utils.Base;
+﻿using Flurl.Http;
+using Framework.Api.Response.Clubware.Objects;
+using IntegrationTests.Utils.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +25,18 @@ namespace IntegrationTests.Tests.Framework.Clubware
             Assert.That(Value, Is.Not.Null);
             Assert.That(Value.Length, Is.AtLeast(80));
             Console.WriteLine($"{Name}: {Value}");
+        }
+
+        [Test]
+        public async Task ClubwareIntegrationSetup_Members_CallingGetMemberReturnsData()
+        {
+            var url = $"{Clubware.BaseUrl}/members/520c6a6e-5852-4dbc-8a3f-c6edde2b86d7";
+            var getMemberResponse = await url.WithClient(Clubware).GetAsync();
+
+            Assert.That(getMemberResponse.StatusCode, Is.EqualTo(200));
+            var content = await getMemberResponse.GetJsonAsync<ClubwareMember>();
+            Assert.That(content, Is.Not.Null);
+            Assert.That(content.MemberId, Is.EqualTo("520c6a6e-5852-4dbc-8a3f-c6edde2b86d7"));
         }
     }
 }
