@@ -1,10 +1,10 @@
-﻿namespace Framework.Api.Response.Clubware.Objects
+﻿namespace Framework.Shared.Objects.Clubware
 {
     public class ClubwareMember
     {
 
-        public string MemberId { get; set; }
-        public string BranchId { get; set; }
+        public Guid MemberId { get; set; }
+        public Guid BranchId { get; set; }
         public string Status { get; set; }
         public string FirstName { get; set; }
         public string Alias1 { get; set; }

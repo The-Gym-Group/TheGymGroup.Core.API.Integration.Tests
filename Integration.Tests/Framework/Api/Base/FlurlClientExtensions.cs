@@ -2,6 +2,7 @@
 using Framework.Api.Request.Clubware;
 using Framework.Api.Response.Clubware;
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace Framework.Api.Base
 {
@@ -21,8 +22,16 @@ namespace Framework.Api.Base
         /// </summary>
         public static async Task<IFlurlClient> ConfigureForClubware(this IFlurlClient flurlClient, string baseUrl=null)
         {
-            flurlClient.BaseUrl = baseUrl ?? flurlClient.BaseUrl;
+            flurlClient = SetBaseUrl(flurlClient, baseUrl);
             //set base headers
+            flurlClient = flurlClient = AddBaseConfHeaders(flurlClient);
+            flurlClient = await SetAccessToken(flurlClient);
+
+            return flurlClient;
+        }
+
+        private static IFlurlClient AddBaseConfHeaders(IFlurlClient flurlClient)
+        {
             flurlClient = flurlClient.WithHeaders(new
             {
                 Connection = "keep-alive",
@@ -31,9 +40,21 @@ namespace Framework.Api.Base
             })
                 .WithHeader("Accept-Encoding", "gzip, deflate, br")
                 .WithHeader("Content-Type", "application/x-www-form-urlencoded");
-            flurlClient = await SetAccessToken(flurlClient);
-
             return flurlClient;
+        }
+
+        private static IFlurlClient SetBaseUrl(IFlurlClient flurlClient, string baseUrl)
+        {
+            flurlClient.BaseUrl = baseUrl ?? flurlClient.BaseUrl;
+            return flurlClient;
+        }
+
+        public static IFlurlClient ConfigureForTGGCoreApi(this IFlurlClient flurlClient, string baseUrl = null)
+        {
+            flurlClient = SetBaseUrl(flurlClient, baseUrl);
+            flurlClient = AddBaseConfHeaders(flurlClient);
+
+            return flurlClient.WithHeader("Authorization", "Basic e3tCYXNpY0F1dGhVc2VybmFtZX19Ont7QmFzaWNBdXRoUGFzc3dvcmR9fQ==");
         }
 
         /// <summary>

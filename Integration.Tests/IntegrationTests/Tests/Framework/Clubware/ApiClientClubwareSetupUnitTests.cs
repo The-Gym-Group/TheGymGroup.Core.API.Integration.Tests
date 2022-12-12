@@ -1,5 +1,5 @@
 ﻿using Flurl.Http;
-using Framework.Api.Response.Clubware.Objects;
+using Framework.Shared.Objects.Clubware;
 using IntegrationTests.Utils.Base;
 using System;
 using System.Collections.Generic;
@@ -36,7 +36,7 @@ namespace IntegrationTests.Tests.Framework.Clubware
             Assert.That(getMemberResponse.StatusCode, Is.EqualTo(200));
             var content = await getMemberResponse.GetJsonAsync<ClubwareMember>();
             Assert.That(content, Is.Not.Null);
-            Assert.That(content.MemberId, Is.EqualTo("520c6a6e-5852-4dbc-8a3f-c6edde2b86d7"));
+            Assert.That(content.MemberId.ToString(), Is.EqualTo("520c6a6e-5852-4dbc-8a3f-c6edde2b86d7"));
         }
     }
 }
