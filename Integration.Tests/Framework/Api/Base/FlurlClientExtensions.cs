@@ -32,15 +32,12 @@ namespace Framework.Api.Base
 
         private static IFlurlClient AddBaseConfHeaders(IFlurlClient flurlClient)
         {
-            flurlClient = flurlClient.WithHeaders(new
+
+            return flurlClient.WithHeaders(new 
             {
-                Connection = "keep-alive",
-                Accept = "application/json",
-                Content = "application/json",
-            })
-                .WithHeader("Accept-Encoding", "gzip, deflate, br")
-                .WithHeader("Content-Type", "application/x-www-form-urlencoded");
-            return flurlClient;
+                Accept = "application/json; charset=utf-8",
+                Content_Type = "application/json",
+            });
         }
 
         private static IFlurlClient SetBaseUrl(IFlurlClient flurlClient, string baseUrl)
@@ -54,7 +51,27 @@ namespace Framework.Api.Base
             flurlClient = SetBaseUrl(flurlClient, baseUrl);
             flurlClient = AddBaseConfHeaders(flurlClient);
 
-            return flurlClient.WithHeader("Authorization", "Basic e3tCYXNpY0F1dGhVc2VybmFtZX19Ont7QmFzaWNBdXRoUGFzc3dvcmR9fQ==");
+            flurlClient = flurlClient.WithHeaders(new
+            {
+                Cache_Control = "no-cache",
+                Ocp_Apim_Subscription_Key = "f4767d1bcc1d4e08a422399c4b604b2c",
+                version = "v1.0"
+            });
+
+            return flurlClient;//flurlClient.WithAdminAuthorization();
+        }
+
+        public static IFlurlClient WithAdminAuthorization(this IFlurlClient flurlClient)
+        {
+            flurlClient = SetXApiHeaders(flurlClient, "TggApi", "fucmEawQ7XXAHUPgByIfT2eRL50x5fMQDFsK2ykmNVXFASclxTCUBVeFQmvd");
+            return flurlClient;
+        }
+
+        public static IFlurlClient SetXApiHeaders(this IFlurlClient flurlClient, string userAuthValue, string keyAuthValue)
+        {
+            flurlClient = flurlClient.WithHeader("X-Api-User", userAuthValue);
+            flurlClient = flurlClient.WithHeader("X-Api-Key", keyAuthValue);
+            return flurlClient;
         }
 
         /// <summary>

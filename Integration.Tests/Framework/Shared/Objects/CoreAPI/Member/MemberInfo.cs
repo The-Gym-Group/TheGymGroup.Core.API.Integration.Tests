@@ -2,7 +2,7 @@
 
 namespace Framework.Shared.Objects.CoreAPI.Member
 {
-    public class MembersInfo
+    public class MemberInfo
     {
         public Guid MemberId { get; set; }
         public string Title { get; set; }
