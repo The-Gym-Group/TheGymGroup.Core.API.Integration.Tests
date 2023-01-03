@@ -20,7 +20,7 @@ namespace IntegrationTests.Utils.Base
         {
             SetUpConfiguration();
             var factory = Services.GetService<IFlurlClientFactory>();
-            Members = factory.Get(new Flurl.Url($"{ApiServerConfiguration.CoreAPI_URL}/member/"));
+            Members = factory.Get(new Flurl.Url($"{ApiServerConfiguration.CoreAPI_URL}/member/")).ConfigureForTGGCoreApi($"{ApiServerConfiguration.CoreAPI_URL}/member/");
             Clubware = await factory.Get(new Flurl.Url($"{ApiServerConfiguration.CLUBWARE_URL}")).ConfigureForClubware(ApiServerConfiguration.CLUBWARE_URL);
         }
 
