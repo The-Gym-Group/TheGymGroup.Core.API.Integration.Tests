@@ -75,7 +75,7 @@ jobs:
       inputs:
         testSelector: 'testAssemblies'
         testAssemblyVer2: |
-          **\CoreAPI\*.*
+          **\CoreAPI\*
           !**\*TestAdapter.dll
           !**\obj\**
         searchFolder: '$(System.DefaultWorkingDirectory)'
