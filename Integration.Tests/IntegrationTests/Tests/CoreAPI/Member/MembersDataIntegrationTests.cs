@@ -5,10 +5,8 @@ using Framework.Shared.Objects.Clubware;
 using Framework.Shared.Objects.CoreAPI.Member;
 using Framework.Shared.Objects.CoreAPI.Payment;
 using IntegrationTests.Utils.Base;
-using Microsoft.AspNetCore.Authentication;
 using System.Net;
 using TestStack.BDDfy;
-using TestStack.BDDfy.Xunit;
 
 namespace IntegrationTests.Tests.CoreAPI.Member
 {
@@ -33,7 +31,7 @@ namespace IntegrationTests.Tests.CoreAPI.Member
 
 
         [Test]
-        public async Task GetMemberPaymentHistory_ReturnsData()
+        public void GetMemberPaymentHistory_ReturnsData()
         {
             this.Given(_ => IGet10RandomClubwareMembers())
                 .And(_ => IGetARandomCMember())
@@ -43,7 +41,7 @@ namespace IntegrationTests.Tests.CoreAPI.Member
         }
 
         [Test]
-        public async Task GetMemberProfileById_ReturnsData()
+        public void GetMemberProfileById_ReturnsData()
         {
             this.Given(_ => IGet10RandomClubwareMembers())
                 .And(_ => IGetARandomCMember())
@@ -53,7 +51,7 @@ namespace IntegrationTests.Tests.CoreAPI.Member
         }
 
         [Test]
-        public async Task GetMembersProfileById_Using10RandomIds_GetsRelevantData()
+        public void GetMembersProfileById_Using10RandomIds_GetsRelevantData()
         {
             this.Given(_ => IGet10RandomClubwareMembers())
                 .Given(_ => IHave10RandomPartialCMembers())
@@ -62,7 +60,7 @@ namespace IntegrationTests.Tests.CoreAPI.Member
         }
 
         [Test]
-        public async Task GetMembersInfoByMembersId_Using10RandomIds_GetsRelevantData()
+        public void GetMembersInfoByMembersId_Using10RandomIds_GetsRelevantData()
         {
             this.Given(_ => IGet10RandomClubwareMembers())
                 .Given(_ => IHave10RandomPartialCMembers())
@@ -203,7 +201,7 @@ namespace IntegrationTests.Tests.CoreAPI.Member
             Assert.That(memberProfile.FirstName.Length, Is.GreaterThan(0));
         }
 
-        private static void AssertPaymentHistoryHasValidData(PartialClubwareMember partialMember, CoreApiResponse<List<MemberPayment>> memberPaymentHistory, int i, MemberPayment paymentHistory)
+        private void AssertPaymentHistoryHasValidData(PartialClubwareMember partialMember, CoreApiResponse<List<MemberPayment>> memberPaymentHistory, int i, MemberPayment paymentHistory)
         {
             Assert.That(paymentHistory.MemberId.ToString(), Is.Not.EqualTo(TestDataConstants.NO_DATA_GUID_FORMAT), $"No valid MemberId found in PaymentHistory {i / memberPaymentHistory.Data.Count} for id '{partialMember.MemberId}'");
             Assert.That(paymentHistory.BranchId.ToString(), Is.Not.EqualTo(TestDataConstants.NO_DATA_GUID_FORMAT), $"No valid BranchId found in PaymentHistory {i / memberPaymentHistory.Data.Count} for id '{partialMember.MemberId}'");
