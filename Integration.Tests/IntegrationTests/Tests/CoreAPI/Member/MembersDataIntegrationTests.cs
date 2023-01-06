@@ -1,21 +1,17 @@
 ﻿using Flurl.Http;
-using TestStack.BDDfy;
 using Framework.Api.Response.CoreAPI;
 using Framework.Properties.Constants;
 using Framework.Shared.Objects.Clubware;
 using Framework.Shared.Objects.CoreAPI.Member;
 using Framework.Shared.Objects.CoreAPI.Payment;
 using IntegrationTests.Utils.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using TestStack.BDDfy;
 using TestStack.BDDfy.Xunit;
 
 namespace IntegrationTests.Tests.CoreAPI.Member
 {
+    [TestFixture]
     [Story(
         AsA = "As an API user",
         IWant = "I want to connect to Member API",
@@ -33,19 +29,34 @@ namespace IntegrationTests.Tests.CoreAPI.Member
         private MemberProfile memberProfile;
         private IFlurlResponse memberProfileResponse;
 
-        public async Task IGet10RandomClubwareMembers()
+        [Test]
+        public async Task GetMemberPaymentHistory_ReturnsData()
         {
-            if (ClubwareMembers == null || ClubwareMembers.Count == 0)
-            {
-                var responses = await $"{Clubware.BaseUrl}/members"
-                .WithClient(Clubware)
-                .GetAsync();
-                ClubwareMembers = await responses.GetJsonAsync<List<PartialClubwareMember>>();
-            }
+            this.Given(_ => IGet10RandomClubwareMembers())
+                .And(_ => IGetARandomCMember())
+                .When(_ => IExtractMemberPaymentHistory())
+                .Then(_ => PaymentHistoryHasValidDate())
+                .BDDfy();
+        }
+        [Test]
+        public async Task GetMemberProfileById_ReturnsData()
+        {
+            this.Given(_ => IGet10RandomClubwareMembers())
+                .And(_ => IGetARandomCMember())
+                .When(_ => IExtractMemberProfileFromCMember()).
+                Then(_ => MemberProfileHasValidData()).BDDfy();
+
+        }
+        [Test]
+        public async Task GetMembersProfileById_Using10RandomIds_GetsRelevantData()
+        {
+            this.Given(_ => IGet10RandomClubwareMembers())
+                .Given(_ => IHave10RandomPartialCMembers())
+                .When(_ => IExtractMemberProfilesFromPartialCMemberData())
+                .Then(_ => MemberProfileDataMatchesClubwareData()).BDDfy();
         }
 
         [Test]
-        [BddfyFact]
         public async Task GetMembersInfoByMembersId_Using10RandomIds_GetsRelevantData()
         {
             this.Given(_ => IGet10RandomClubwareMembers())
@@ -91,15 +102,6 @@ namespace IntegrationTests.Tests.CoreAPI.Member
                    await $"{Members.BaseUrl}members/member/{cMember.MemberId.ToString()}"
                    .WithClient(Members).GetAsync()));
         }
-        [Test]
-        [BddfyFact]
-        public async Task GetMembersProfileById_Using10RandomIds_GetsRelevantData()
-        {
-            this.Given(_ => IGet10RandomClubwareMembers())
-                .Given(_ => IHave10RandomPartialCMembers())
-                .When(_ => IExtractMemberProfilesFromPartialCMemberData())
-                .Then(_ => MemberProfileDataMatchesClubwareData()).BDDfy();
-        }
 
         private void MemberProfileDataMatchesClubwareData()
         {
@@ -138,16 +140,17 @@ namespace IntegrationTests.Tests.CoreAPI.Member
             if (random10MembersProfiles == null) Assert.Fail("Could not get any member profiles for cmembers.");
         }
 
-        [Test]
-        public async Task GetMemberProfileById_ReturnsData()
+
+        public async Task IGet10RandomClubwareMembers()
         {
-            this.Given(_ => IGet10RandomClubwareMembers())
-                .And(_ => IGetARandomCMember())
-                .When(_=> IExtractMemberProfileFromCMember()).
-                Then(_ => MemberProfileHasValidData()).BDDfy();
-
+            if (ClubwareMembers == null || ClubwareMembers.Count == 0)
+            {
+                var responses = await $"{Clubware.BaseUrl}/members"
+                .WithClient(Clubware)
+                .GetAsync();
+                ClubwareMembers = await responses.GetJsonAsync<List<PartialClubwareMember>>();
+            }
         }
-
         private async Task IExtractMemberProfileFromCMember()
         {
             memberProfileResponse = await $"{Members.BaseUrl}members/profile/{partialMember.MemberId.ToString()}"
@@ -156,15 +159,7 @@ namespace IntegrationTests.Tests.CoreAPI.Member
 
         }
 
-        [Test]
-        public async Task GetMemberPaymentHistory_ReturnsData()
-        {
-            this.Given(_ => IGet10RandomClubwareMembers())
-                .And(_ => IGetARandomCMember())
-                .When(_ => IExtractMemberPaymentHistory())
-                .Then(_=> PaymentHistoryHasValidDate())
-                .BDDfy();
-        }
+
 
         private void PaymentHistoryHasValidDate()
         {

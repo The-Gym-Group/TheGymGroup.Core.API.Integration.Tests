@@ -1,11 +1,6 @@
 ﻿using Flurl.Http;
 using Framework.Shared.Objects.Clubware;
 using IntegrationTests.Utils.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntegrationTests.Tests.Framework.Clubware
 {
