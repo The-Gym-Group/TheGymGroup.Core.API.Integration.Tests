@@ -5,6 +5,7 @@ using Framework.Shared.Objects.Clubware;
 using Framework.Shared.Objects.CoreAPI.Member;
 using Framework.Shared.Objects.CoreAPI.Payment;
 using IntegrationTests.Utils.Base;
+using Microsoft.AspNetCore.Authentication;
 using System.Net;
 using TestStack.BDDfy;
 using TestStack.BDDfy.Xunit;
@@ -19,7 +20,7 @@ namespace IntegrationTests.Tests.CoreAPI.Member
     public class MembersDataIntegrationTests : BaseClubwareIntegrationTest
     {
         List<PartialClubwareMember> ClubwareMembers { get; set; }
-
+        #region privateVars
         private List<PartialClubwareMember> random10cMembers;
         private IFlurlResponse[] random10MembersInfoResponses;
         private List<MemberInfo> random10MembersInfo;
@@ -28,6 +29,8 @@ namespace IntegrationTests.Tests.CoreAPI.Member
         private CoreApiResponse<List<MemberPayment>> memberPaymentHistory;
         private MemberProfile memberProfile;
         private IFlurlResponse memberProfileResponse;
+        #endregion
+
 
         [Test]
         public async Task GetMemberPaymentHistory_ReturnsData()
@@ -38,6 +41,7 @@ namespace IntegrationTests.Tests.CoreAPI.Member
                 .Then(_ => PaymentHistoryHasValidDate())
                 .BDDfy();
         }
+
         [Test]
         public async Task GetMemberProfileById_ReturnsData()
         {
@@ -47,6 +51,7 @@ namespace IntegrationTests.Tests.CoreAPI.Member
                 Then(_ => MemberProfileHasValidData()).BDDfy();
 
         }
+
         [Test]
         public async Task GetMembersProfileById_Using10RandomIds_GetsRelevantData()
         {
@@ -66,6 +71,13 @@ namespace IntegrationTests.Tests.CoreAPI.Member
                 .Then(_ => MembersInfoMatchClubwareMemberData()).BDDfy();
         }
 
+        private void IHaveAnInvalidCMember()
+        {
+            partialMember = new PartialClubwareMember()
+            {
+                MemberId = Guid.Parse(TestDataConstants.NO_DATA_GUID_FORMAT)
+            };
+        }
         private void MembersInfoMatchClubwareMemberData()
         {
             Assert.Multiple(async () =>
@@ -158,8 +170,6 @@ namespace IntegrationTests.Tests.CoreAPI.Member
             memberProfile = (await memberProfileResponse.GetJsonAsync<CoreApiResponse<MemberProfile>>()).Data;
 
         }
-
-
 
         private void PaymentHistoryHasValidDate()
         {
