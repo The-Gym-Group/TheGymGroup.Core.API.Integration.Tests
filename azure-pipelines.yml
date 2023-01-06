@@ -3,12 +3,28 @@
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - Framework/*
+      - IntegrationTests/*
+
 trigger:
-- main
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - Framework/*
+      - IntegrationTests/*
+
 
 pool:
-  vmImage: 'windows-latest'
-
+  vmImage: 'ubuntu-20.04'
+  
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
