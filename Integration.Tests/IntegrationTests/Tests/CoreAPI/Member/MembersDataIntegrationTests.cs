@@ -69,13 +69,7 @@ namespace IntegrationTests.Tests.CoreAPI.Member
                 .Then(_ => MembersInfoMatchClubwareMemberData()).BDDfy();
         }
 
-        private void IHaveAnInvalidCMember()
-        {
-            partialMember = new PartialClubwareMember()
-            {
-                MemberId = Guid.Parse(TestDataConstants.NO_DATA_GUID_FORMAT)
-            };
-        }
+       
         private void MembersInfoMatchClubwareMemberData()
         {
             Assert.Multiple(async () =>
