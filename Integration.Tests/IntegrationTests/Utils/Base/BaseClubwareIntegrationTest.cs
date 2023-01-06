@@ -1,10 +1,10 @@
 using Flurl.Http;
 using Flurl.Http.Configuration;
 using Framework.Api.Base;
-using Framework.Properties.Constants;
 using Framework.Dependency;
-using Microsoft.Extensions.DependencyInjection;
+using Framework.Properties.Constants;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace IntegrationTests.Utils.Base
 {
